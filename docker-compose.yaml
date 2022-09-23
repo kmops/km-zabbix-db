@@ -1,0 +1,44 @@
+version: '3.5'
+services: 
+ mysql-server:
+  image: mysql:8.0-oracle
+  container_name: zabbix-db
+  command:
+   - mysqld
+   - --character-set-server=utf8mb4
+   - --collation-server=utf8mb4_bin
+   - --default-authentication-plugin=mysql_native_password
+  ports:
+    - "3306:3306"
+  volumes:
+   - ./zbx_env/var/lib/mysql:/var/lib/mysql:rw
+  env_file:
+   - ./.env
+     #  secrets:
+     #   - MYSQL_USER
+     #   - MYSQL_PASSWORD
+     #   - MYSQL_ROOT_PASSWORD
+  stop_grace_period: 1m
+  networks:
+   zabbix:
+    aliases:
+     - mysql-server
+     - zabbix-database
+     - mysql-database
+   zabbix:
+
+networks:
+ zabbix:
+  driver: bridge
+  external: true
+  internal: true
+
+  #secrets:
+  #  MYSQL_USER:
+  #    file: ./env_vars/.MYSQL_USER
+  #  MYSQL_PASSWORD:
+  #    file: ./env_vars/.MYSQL_PASSWORD
+  #  MYSQL_ROOT_USER:
+  #    file: ./env_vars/.MYSQL_ROOT_USER
+  #  MYSQL_ROOT_PASSWORD:
+  #    file: ./env_vars/.MYSQL_ROOT_PASSWORD
